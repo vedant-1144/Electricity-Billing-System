@@ -61,7 +61,7 @@ public class Login extends JFrame {
 
         setSize(640,300);
         setLocation(400,200);
-        setVisible(false);
+        setVisible(true);
     }
 
     public static void main(String[] args) {

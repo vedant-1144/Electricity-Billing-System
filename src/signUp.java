@@ -72,16 +72,17 @@ public class signUp extends JFrame {
 
         //Buttons :-
         JButton create = new JButton("Create");
-        create.setBackground(Color.BLACK);
-        create.setForeground(Color.WHITE);
+
+        create.setForeground(Color.BLACK);
         create.setBounds(140,260,120,25);
         panel.add(create);
 
         JButton back = new JButton("Back");
-        back.setBackground(Color.BLACK);
+        back.setBackground(Color.WHITE);
         back.setForeground(Color.WHITE);
         back.setBounds(300,260,120,25);
-        panel.add(back);
+        panel.add(back); 
+
 
         setVisible(true);
     }
