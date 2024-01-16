@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+public class Login extends JFrame implements ActionListener{
 
-public class Login extends JFrame {
+    JButton login, signup, cancel;
 
     Login() {
         super("Login Page");
@@ -36,20 +38,23 @@ public class Login extends JFrame {
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/login.png"));
         Image i2 = i1.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
-        JButton login = new JButton("Login", new ImageIcon(i2));
+        login = new JButton("Login", new ImageIcon(i2));
         login.setBounds(330,160,100,20);
+        login.addActionListener(this);
         add(login);
 
         ImageIcon i3 = new ImageIcon(ClassLoader.getSystemResource("icon/cancel.jpg"));
         Image i4 = i3.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
-        JButton cancel = new JButton("Cancel", new ImageIcon(i4));
+        cancel = new JButton("Cancel", new ImageIcon(i4));
         cancel.setBounds(450,160,100,20);
+        cancel.addActionListener(this);
         add(cancel);
 
         ImageIcon i5 = new ImageIcon(ClassLoader.getSystemResource("icon/signup.png"));
         Image i6 = i5.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
-        JButton signup = new JButton("Sign Up", new ImageIcon(i6));
+        signup = new JButton("Sign Up", new ImageIcon(i6));
         signup.setBounds(380,200,100,20);
+        signup.addActionListener(this);
         add(signup);
 
         ImageIcon i7 = new ImageIcon(ClassLoader.getSystemResource("icon/second.jpg"));
@@ -64,6 +69,17 @@ public class Login extends JFrame {
         setVisible(true);
     }
 
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == login) {
+
+        } else if(ae.getSource() == signup) {
+            setVisible(false);
+            new signUp();
+
+        } else if(ae.getSource() == cancel) {
+            setVisible(false);
+        }
+    }
     public static void main(String[] args) {
         new Login();
     }

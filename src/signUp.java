@@ -1,8 +1,11 @@
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.*;
 
-public class signUp extends JFrame {
+public class signUp extends JFrame implements ActionListener{
+    JButton create, back;
+
     signUp() {
         setBounds(450, 150, 700, 400);
         getContentPane().setBackground(Color.WHITE);
@@ -71,20 +74,38 @@ public class signUp extends JFrame {
         panel.add(password); 
 
         //Buttons :-
-        JButton create = new JButton("Create");
-
+        create = new JButton("Create");
+        // create.setBackground(Color.BLACK);
         create.setForeground(Color.BLACK);
         create.setBounds(140,260,120,25);
+        create.addActionListener(this);
         panel.add(create);
 
-        JButton back = new JButton("Back");
-        back.setBackground(Color.WHITE);
-        back.setForeground(Color.WHITE);
+        back = new JButton("Back");
+        // create.setBackground(Color.BLACK);
+        back.setForeground(Color.BLACK);
         back.setBounds(300,260,120,25);
+        back.addActionListener(this);
         panel.add(back); 
+
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/signUpImage.png"));
+        Image i2 = i1.getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+        ImageIcon i3 = new ImageIcon(i2);
+        JLabel image = new JLabel(i3);
+        image.setBounds(415,30,250,250);
+        panel.add(image);
 
 
         setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == create) {
+
+        } else if(ae.getSource() == back) {
+            setVisible(false);
+            new Login();
+        }
     }
     public static void main(String[] args) {
         new signUp();
