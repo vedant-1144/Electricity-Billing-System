@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-// import java.sql.*;
+import java.sql.*;
 import java.awt.event.*;
 
 public class ViewInformation extends JFrame implements ActionListener{

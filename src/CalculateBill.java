@@ -31,15 +31,15 @@ public class CalculateBill extends JFrame implements ActionListener{
         
         meternumber = new Choice();
         
-        // try {
-        //     Conn c  = new Conn();
-        //     ResultSet rs = c.s.executeQuery("select * from customer");
-        //     while(rs.next()) {
-        //         meternumber.add(rs.getString("meter_no"));
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            Conn c  = new Conn();
+            ResultSet rs = c.executeQuery("select * from customer");
+            while(rs.next()) {
+                meternumber.add(rs.getString("meter_no"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         meternumber.setBounds(240, 80, 200, 20);
         p.add(meternumber);
@@ -60,16 +60,16 @@ public class CalculateBill extends JFrame implements ActionListener{
         labeladdress.setBounds(240, 160, 200, 20);
         p.add(labeladdress);
         
-        // try {
-        //     Conn c = new Conn();
-        //     ResultSet rs = c.s.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
-        //     while(rs.next()) {
-        //         lblname.setText(rs.getString("name"));
-        //         labeladdress.setText(rs.getString("address"));
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
+        try {
+            Conn c = new Conn();
+            ResultSet rs = c.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
+            while(rs.next()) {
+                lblname.setText(rs.getString("name"));
+                labeladdress.setText(rs.getString("address"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         meternumber.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ie) {

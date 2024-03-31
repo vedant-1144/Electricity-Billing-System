@@ -110,34 +110,34 @@ public class NewCustomer extends JFrame implements ActionListener{
     }
     
     public void actionPerformed(ActionEvent ae) {
-        // if (ae.getSource() == next) {
-        //     String name = tfname.getText();
-        //     String meter = lblmeter.getText();
-        //     String address = tfaddress.getText();
-        //     String city = tfcity.getText();
-        //     String state = tfstate.getText();
-        //     String email = tfemail.getText();
-        //     String phone = tfphone.getText();
+        if (ae.getSource() == next) {
+            String name = tfname.getText();
+            String meter = lblmeter.getText();
+            String address = tfaddress.getText();
+            String city = tfcity.getText();
+            String state = tfstate.getText();
+            String email = tfemail.getText();
+            String phone = tfphone.getText();
             
-        //     String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"', '"+city+"', '"+state+"', '"+email+"', '"+phone+"')";
-        //     String query2 = "insert into login values('"+meter+"', '', '"+name+"', '', '')";
+            String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"', '"+city+"', '"+state+"', '"+email+"', '"+phone+"')";
+            String query2 = "insert into login values('"+meter+"', '', '"+name+"', '', '')";
             
-        //     try {
-        //         Conn c = new Conn();
-        //         c.s.executeUpdate(query1);
-        //         c.s.executeUpdate(query2);
+            // try {
+            //     Conn c = new Conn();
+            //     c.executeUpdate(query1);
+            //     c.executeUpdate(query2);
                 
-        //         JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
-        //         setVisible(false);
+            //     JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
+            //     setVisible(false);
                 
-        //         // new frame
-        //         new MeterInfo(meter);
-        //     } catch (Exception e) {
-        //         e.printStackTrace();
-        //     }
-        // } else {
+            //     // new frame
+            //     new MeterInfo(meter);
+            // } catch (Exception e) {
+            //     e.printStackTrace();
+            // }
+        } else {
             setVisible(false);
-        // }
+        }
     }
     
     public static void main(String[] args) {

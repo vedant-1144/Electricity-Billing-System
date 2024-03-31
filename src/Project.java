@@ -226,6 +226,6 @@ public class Project extends JFrame implements ActionListener{
     }
 
     public static void main(String[] args) {
-        new Project("User", "");
+        new Project("Admin", "");
     }
 }

@@ -11,7 +11,6 @@ public class signUp extends JFrame implements ActionListener{
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 
-        //Panel Properties :- 
         JPanel panel = new JPanel();
         panel.setBounds(30,30,650,300);
         panel.setBorder(new TitledBorder(new LineBorder(new Color(173,216,230), 2), "Create-Account", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
@@ -94,7 +93,6 @@ public class signUp extends JFrame implements ActionListener{
         JLabel image = new JLabel(i3);
         image.setBounds(415,30,250,250);
         panel.add(image);
-
 
         setVisible(true);
     }
