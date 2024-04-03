@@ -11,14 +11,14 @@ public class BillDetails extends JFrame{
         getContentPane().setBackground(Color.WHITE);
         JTable table = new JTable();
         
-        try {
-            Conn c = new Conn();
-            String query = "select * from bill where meter_no = '"+meter+"'";
-            ResultSet rs = c.executeQuery(query);
-            table.setModel(DbUtils.resultSetToTableModel(rs));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Conn c = new Conn();
+        //     String query = "select * from bill where meter_no = '"+meter+"'";
+        //     ResultSet rs = c.executeQuery(query);
+        //     table.setModel(DbUtils.resultSetToTableModel(rs));
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
         
         JScrollPane sp = new JScrollPane(table);
         sp.setBounds(0, 0, 700, 650);

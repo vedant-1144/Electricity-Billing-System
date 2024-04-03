@@ -161,7 +161,6 @@ public class Project extends JFrame implements ActionListener{
         JMenu mexit = new JMenu("Exit");
         mexit.setForeground(Color.RED);
         
-        
         JMenuItem exit = new JMenuItem("Exit");
         exit.setFont(new Font("monospaced", Font.PLAIN, 12));
         exit.setBackground(Color.WHITE);
@@ -182,6 +181,15 @@ public class Project extends JFrame implements ActionListener{
         }
         mb.add(utility);
         mb.add(mexit);
+
+        JLabel about = new JLabel("About");
+        about.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        about.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(Project.this, "Electricity Billing System");
+            }
+        });
+        mb.add(about);
         
         setLayout(new FlowLayout());
         setVisible(true);
@@ -204,17 +212,17 @@ public class Project extends JFrame implements ActionListener{
         } else if (msg.equals("Bill Details")) {
             new BillDetails(meter);
         } else if (msg.equals("Notepad")) {
-            // try {
-            //     Runtime.getRuntime().exec("notepad.exe");
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                Runtime.getRuntime().exec("notepad.exe");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (msg.equals("Calculator")) {
-            // try {
-            //     Runtime.getRuntime().exec("calc.exe");
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                Runtime.getRuntime().exec("calc.exe");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (msg.equals("Exit")) {
             setVisible(false);
             new Login();

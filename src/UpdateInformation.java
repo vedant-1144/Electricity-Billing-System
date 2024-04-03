@@ -117,21 +117,7 @@ public class UpdateInformation extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == update) {
-            String address = tfaddress.getText();
-            String city = tfcity.getText();
-            String state = tfstate.getText();
-            String email = tfemail.getText();
-            String phone = tfphone.getText();
-            
-            // try {
-            //     Conn c = new Conn();
-            //     c.s.executeUpdate("update customer set address = '"+address+"', city = '"+city+"', state = '"+state+"', email = '"+email+"', phone = '"+phone+"' where meter_no = '"+meter+"'");
-
-            //     JOptionPane.showMessageDialog(null, "User Information Updated Successfully");
-            //     setVisible(false);
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
+            //Update the Database
         } else {
             setVisible(false);
         }

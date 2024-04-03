@@ -1,8 +1,8 @@
 import java.sql.*;
 public class Conn {
     static final String DB_URL = "jdbc:mysql://localhost:3306/EBS";
-    static final String USER = "root";
-    static final String PASS = "Vedant@11";
+    static final String USER = "username";
+    static final String PASS = "password";
     public static void main(String[] args) {
         // Open a connection
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {

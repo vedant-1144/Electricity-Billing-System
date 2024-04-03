@@ -1,9 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 public class Login extends JFrame implements ActionListener{
 
     JButton login, signup, cancel;
+    JTextField username;
+    JPasswordField password;
+    Choice loggingin;
+
     Login() {
         super("Login Page");
         getContentPane().setBackground(Color.WHITE);
@@ -13,7 +18,7 @@ public class Login extends JFrame implements ActionListener{
         lblusername.setBounds(300,20,100,20);
         add(lblusername);
 
-        JTextField username = new JTextField();
+        username = new JTextField();
         username.setBounds(400,20,150,20);
         add(username);
 
@@ -21,30 +26,35 @@ public class Login extends JFrame implements ActionListener{
         lblpassword.setBounds(300,60,100,20);
         add(lblpassword);
 
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setBounds(400, 60, 150, 20);
-        add(passwordField);
+        password = new JPasswordField();
+        password.setBounds(400, 60, 150, 20);
+        add(password);
 
         ImageIcon eye1 = new ImageIcon(ClassLoader.getSystemResource("icon/eye.png"));
         Image eye2 = eye1.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
-        JToggleButton showPasswordButton = new JToggleButton(new ImageIcon(eye2));
-        showPasswordButton.setBounds(555, 60, 16, 16);
-        showPasswordButton.addActionListener(new ActionListener() {
+        ImageIcon eye3 = new ImageIcon(ClassLoader.getSystemResource("icon/eye2.png"));
+        Image eye4 = eye3.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
+
+        JToggleButton show = new JToggleButton(new ImageIcon(eye4));
+        show.setBounds(555, 60, 16, 16);
+        show.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (showPasswordButton.isSelected()) {
-                    passwordField.setEchoChar((char) 0); // Show password
+                if (show.isSelected()) {
+                    password.setEchoChar((char) 0); // Show password
+                    show.setIcon(new ImageIcon(eye2));
                 } else {
-                    passwordField.setEchoChar('\u2022'); // Hide password
+                    password.setEchoChar('\u2022'); // Hide password
+                    show.setIcon(new ImageIcon(eye4));
                 }
             }
         });
-        add(showPasswordButton);
+        add(show);
 
         JLabel logginginas = new JLabel("Logging in as");
         logginginas.setBounds(300,100,100,20);
         add(logginginas);
 
-        Choice loggingin = new Choice();
+        loggingin = new Choice();
         loggingin.add("Admin");
         loggingin.add("Customer");
         loggingin.setBounds(400,100,150,20);

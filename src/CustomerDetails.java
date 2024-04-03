@@ -16,19 +16,21 @@ public class CustomerDetails extends JFrame implements ActionListener {
         setLocation(200, 150);
 
         table = new JTable();
-
         try {
             Conn c = new Conn();
             ResultSet rs = c.executeQuery("SELECT * FROM Customer");
-            // Convert ResultSet to TableModel
-            DefaultTableModel model = new DefaultTableModel();
+            DefaultTableModel model = new DefaultTableModel() {
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
-            // Add columns to the model
+
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 model.addColumn(metaData.getColumnLabel(columnIndex));
             }
-            // Add rows to the model
+
             while (rs.next()) {
                 Object[] row = new Object[columnCount];
                 for (int i = 0; i < columnCount; i++) {
@@ -36,12 +38,11 @@ public class CustomerDetails extends JFrame implements ActionListener {
                 }
                 model.addRow(row);
             }
-            // Set the model to your table
             table.setModel(model);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        
         JScrollPane sp = new JScrollPane(table);
         add(sp);
 
