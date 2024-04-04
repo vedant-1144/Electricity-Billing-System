@@ -141,14 +141,14 @@ public class PayBill extends JFrame implements ActionListener{
     
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == pay) {
+            setVisible(false);
+            new PaymentVerification();
             // try {
             //     Conn c = new Conn();
             //     c.s.executeUpdate("update bill set status = 'Paid' where meter_no = '"+meter+"' AND month='"+cmonth.getSelectedItem()+"'");
             // } catch (Exception e) {
             //     e.printStackTrace();
             // }
-            setVisible(false);
-            new Paytm(meter);
         } else {
             setVisible(false);
         }
