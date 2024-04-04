@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class PaymentVerification extends JFrame {
+public class PaymentVerification extends JFrame implements ActionListener {
     JTextField captcha;
     JLabel lblcaptcha;
     JButton verify, newCaptcha;
@@ -11,6 +11,7 @@ public class PaymentVerification extends JFrame {
     public PaymentVerification() {
         super("Payment Gateway Verification");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 
         captchaCode = generateCaptcha();
@@ -19,35 +20,25 @@ public class PaymentVerification extends JFrame {
         lblcaptcha.setBounds(50, 50, 200, 40);
         add(lblcaptcha);
 
-        captcha = new JTextField(10);
-        captcha.setBounds(50, 100, 200, 30);
+        JLabel lblenter = new JLabel("Enter Captcha: ");
+        lblenter.setBounds(50, 100, 150, 20);
+        add(lblenter);
+
+        captcha = new JTextField(4);
+        captcha.setBounds(150, 100, 100, 20);
+        captcha.addActionListener(this);
         add(captcha);
 
         verify = new JButton("Verify");
-        verify.setBounds(50, 150, 100, 30);
-        verify.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String captchaEntered = captcha.getText();
-                if (isValidCaptcha(captchaEntered)) {
-                    JOptionPane.showMessageDialog(null, "Verification successful.\nPayment Complete");
-                    setVisible(false);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid CAPTCHA.\nPlease try again.");
-                }
-            }
-        });
+        verify.setBounds(50, 150, 100, 20);
+        verify.addActionListener(this);
         add(verify);
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/icon13.png"));
         Image i2 = i1.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
         newCaptcha = new JButton("New Captcha", new ImageIcon(i2));
-        newCaptcha.setBounds(150, 150, 130, 30);
-        newCaptcha.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                captchaCode = generateCaptcha();
-                lblcaptcha.setText(captchaCode);
-            }
-        });
+        newCaptcha.setBounds(160, 150, 120, 20);
+        newCaptcha.addActionListener(this);
         add(newCaptcha);
 
         ImageIcon i3 = new ImageIcon(ClassLoader.getSystemResource("icon/captcha.png"));
@@ -59,6 +50,27 @@ public class PaymentVerification extends JFrame {
         setBounds(500, 300, 500, 250);
         setVisible(true);
     }
+
+    public void actionPerformed(ActionEvent ae) {
+        if(ae.getSource() == captcha) {
+            verify.doClick();
+        }
+        else if(ae.getSource() == verify) {
+            String captchaEntered = captcha.getText();
+            if (isValidCaptcha(captchaEntered)) {
+                JOptionPane.showMessageDialog(null, "Verification successful.\nPayment Complete");
+                setVisible(false);
+                new Project("Customer", "");
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid CAPTCHA.\nPlease try again.");
+            }
+        }
+        else if(ae.getSource() == newCaptcha) {
+            captchaCode = generateCaptcha();
+            lblcaptcha.setText(captchaCode);
+            captcha.setText("");
+        }
+    };
 
     private String generateCaptcha() {
         return String.format("%04d", (int) (Math.random() * 10000));
