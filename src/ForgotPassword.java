@@ -22,7 +22,7 @@ public class ForgotPassword extends JFrame implements ActionListener{
         search.addActionListener(this);
         add(search);
     
-        JLabel lblquestion = new JLabel("Security Question");
+        JLabel lblquestion = new JLabel("Security\nQuestion");
         lblquestion.setBounds(250, 60, 130, 20);
         add(lblquestion);
     
