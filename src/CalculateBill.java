@@ -30,16 +30,26 @@ public class CalculateBill extends JFrame implements ActionListener{
         p.add(lblmeternumber);
         
         meternumber = new Choice();
-        
+
         try {
-            Conn c  = new Conn();
-            ResultSet rs = c.executeQuery("select * from customer");
+            Connection connection = Connect.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("select * from customer");
             while(rs.next()) {
                 meternumber.add(rs.getString("meter_no"));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+//        try {
+//            Connect c  = new Connect();
+//            ResultSet rs = c.executeQuery("select * from customer");
+//            while(rs.next()) {
+//                meternumber.add(rs.getString("meter_no"));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         
         meternumber.setBounds(240, 80, 200, 20);
         p.add(meternumber);
@@ -60,31 +70,45 @@ public class CalculateBill extends JFrame implements ActionListener{
         labeladdress.setBounds(240, 160, 200, 20);
         p.add(labeladdress);
         
-        try {
-            Conn c = new Conn();
-            ResultSet rs = c.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
-            while(rs.next()) {
-                lblname.setText(rs.getString("name"));
-                labeladdress.setText(rs.getString("address"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Connection connection = Connect.getConnection();
+//            ResultSet rs = c.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
+//            while(rs.next()) {
+//                lblname.setText(rs.getString("name"));
+//                labeladdress.setText(rs.getString("address"));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         
         meternumber.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ie) {
-                // try {
-                //     Conn c = new Conn();
-                //     ResultSet rs = c.s.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
-                //     while(rs.next()) {
-                //         lblname.setText(rs.getString("name"));
-                //         labeladdress.setText(rs.getString("address"));
-                //     }
-                // } catch (Exception e) {
-                //     e.printStackTrace();
-                // }
+                  try {
+                    Connection connection = Connect.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement("select * from customer where meter_no = ?");
+                    preparedStatement.setString(1, meternumber.getSelectedItem());
+                    ResultSet rs = preparedStatement.executeQuery();
+                    if(rs.next()) {
+                        lblname.setText(rs.getString("name"));
+                        labeladdress.setText(rs.getString("address"));
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
+//                 try {
+//                     Connection c = Connect.getConnection();
+//                     ResultSet rs = c.s.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
+//                     while(rs.next()) {
+//                         lblname.setText(rs.getString("name"));
+//                         labeladdress.setText(rs.getString("address"));
+//                     }
+//                 } catch (Exception e) {
+//                     e.printStackTrace();
+//                 }
+//            }
+//        });
         
         JLabel lblcity = new JLabel("Units Consumed");
         lblcity.setBounds(100, 200, 100, 20);
@@ -142,47 +166,90 @@ public class CalculateBill extends JFrame implements ActionListener{
     }
     
     public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == next) {
-            String meter = meternumber.getSelectedItem();
-            String units = tfunits.getText();
-            String month = cmonth.getSelectedItem();
-            
-            int totalbill = 0;
-            int unit_consumed = Integer.parseInt(units);
+            if (ae.getSource() == next) {
+                String meter = meternumber.getSelectedItem();
+                String units = tfunits.getText();
+                String month = cmonth.getSelectedItem();
 
-            String query = "select * from tax";
-            
-            // try {
-            //     Conn c = new Conn();
-            //     ResultSet rs = c.s.executeQuery(query);
-                
-            //     while(rs.next()) {
-            //         totalbill += unit_consumed * Integer.parseInt(rs.getString("cost_per_unit"));
-            //         totalbill += Integer.parseInt(rs.getString("meter_rent"));
-            //         totalbill += Integer.parseInt(rs.getString("service_charge"));
-            //         totalbill += Integer.parseInt(rs.getString("service_tax"));
-            //         totalbill += Integer.parseInt(rs.getString("swacch_bharat_cess"));
-            //         totalbill += Integer.parseInt(rs.getString("fixed_tax"));
-            //     }
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
-            
-            String query2 = "insert into bill values('"+meter+"', '"+month+"', '"+units+"', '"+totalbill+"', 'Not Paid')";
-        
-            // try {
-            //     Conn c  =  new Conn();
-            //     c.s.executeUpdate(query2);
-                
-            //     JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
-            //     setVisible(false);
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
-        } else {
-            setVisible(false);
+                int totalbill = 0;
+                int unit_consumed = Integer.parseInt(units);
+
+                try {
+                    Connection connection = Connect.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement("select * from tax");
+                    ResultSet rs = preparedStatement.executeQuery();
+                    while(rs.next()) {
+                        totalbill += unit_consumed * Integer.parseInt(rs.getString("cost_per_unit"));
+                        totalbill += Integer.parseInt(rs.getString("meter_rent"));
+                        totalbill += Integer.parseInt(rs.getString("service_charge"));
+                        totalbill += Integer.parseInt(rs.getString("service_tax"));
+                        totalbill += Integer.parseInt(rs.getString("swacch_bharat_cess"));
+                        totalbill += Integer.parseInt(rs.getString("fixed_tax"));
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Connection connection = Connect.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement("insert into bill values(?, ?, ?, ?, ?)");
+                    preparedStatement.setString(1, meter);
+                    preparedStatement.setString(2, month);
+                    preparedStatement.setString(3, units);
+                    preparedStatement.setInt(4, totalbill);
+                    preparedStatement.setString(5, "Not Paid");
+
+                    preparedStatement.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
+                    setVisible(false);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                setVisible(false);
+            }
+//        if (ae.getSource() == next) {
+//            String meter = meternumber.getSelectedItem();
+//            String units = tfunits.getText();
+//            String month = cmonth.getSelectedItem();
+//
+//            int totalbill = 0;
+//            int unit_consumed = Integer.parseInt(units);
+//
+//            String query = "select * from tax";
+//
+//            // try {
+//            //     Conn c = new Conn();
+//            //     ResultSet rs = c.s.executeQuery(query);
+//
+//            //     while(rs.next()) {
+//            //         totalbill += unit_consumed * Integer.parseInt(rs.getString("cost_per_unit"));
+//            //         totalbill += Integer.parseInt(rs.getString("meter_rent"));
+//            //         totalbill += Integer.parseInt(rs.getString("service_charge"));
+//            //         totalbill += Integer.parseInt(rs.getString("service_tax"));
+//            //         totalbill += Integer.parseInt(rs.getString("swacch_bharat_cess"));
+//            //         totalbill += Integer.parseInt(rs.getString("fixed_tax"));
+//            //     }
+//            // } catch (Exception e) {
+//            //     e.printStackTrace();
+//            // }
+//
+//            String query2 = "insert into bill values('"+meter+"', '"+month+"', '"+units+"', '"+totalbill+"', 'Not Paid')";
+//
+//            // try {
+//            //     Conn c  =  new Conn();
+//            //     c.s.executeUpdate(query2);
+//
+//            //     JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
+//            //     setVisible(false);
+//            // } catch (Exception e) {
+//            //     e.printStackTrace();
+//            // }
+//        } else {
+//            setVisible(false);
+//        }
         }
-    }
     
     public static void main(String[] args) {
         new CalculateBill();
