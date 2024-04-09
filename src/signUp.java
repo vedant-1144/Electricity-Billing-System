@@ -36,10 +36,12 @@ public class signUp extends JFrame implements ActionListener{
         lblmeter.setBounds(100,90,140,20);
         lblmeter.setForeground(Color.GRAY);
         lblmeter.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblmeter.setVisible(false);
         panel.add(lblmeter);
 
         JTextField meter = new JTextField();
         meter.setBounds(260,90,150,20);
+        meter.setVisible(false);
         panel.add(meter); 
 
         JLabel lblusername =  new JLabel("Username");
@@ -71,6 +73,19 @@ public class signUp extends JFrame implements ActionListener{
         JTextField password = new JTextField();
         password.setBounds(260,210,150,20);
         panel.add(password); 
+
+        accountType.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ie) {
+                String user = accountType.getSelectedItem();
+                if(user.equals("Customer")) {
+                    lblmeter.setVisible(true);
+                    meter.setVisible(true);
+                } else {
+                    lblmeter.setVisible(false);
+                    meter.setVisible(false);
+                }
+            }
+        });
 
         //Buttons :-
         create = new JButton("Create");

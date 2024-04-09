@@ -131,7 +131,7 @@ public class NewCustomer extends JFrame implements ActionListener{
             //     setVisible(false);
                 
             //     // new frame
-            //     new MeterInfo(meter);
+                new MeterInfo(meter);
             // } catch (Exception e) {
             //     e.printStackTrace();
             // }

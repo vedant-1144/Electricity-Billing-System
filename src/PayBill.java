@@ -4,10 +4,10 @@ import java.sql.*;
 import java.awt.event.*;
 
 public class PayBill extends JFrame implements ActionListener{
-
     Choice cmonth;
     JButton pay, back;
     String meter;
+    
     PayBill(String meter) {
         this.meter = meter;
         setLayout(null);
