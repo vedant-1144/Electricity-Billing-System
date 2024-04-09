@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.awt.event.*;
 
@@ -118,28 +121,52 @@ public class NewCustomer extends JFrame implements ActionListener{
             String state = tfstate.getText();
             String email = tfemail.getText();
             String phone = tfphone.getText();
-            
-            String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"', '"+city+"', '"+state+"', '"+email+"', '"+phone+"')";
-            String query2 = "insert into login values('"+meter+"', '', '"+name+"', '', '')";
-            
-            // try {
-            //     Conn c = new Conn();
-            //     c.executeUpdate(query1);
-            //     c.executeUpdate(query2);
-                
-            //     JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
-            //     setVisible(false);
-                
-            //     // new frame
-            //     new MeterInfo(meter);
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
+
+            String query1 = "INSERT INTO consumer VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query2 = "INSERT INTO users VALUES (?, '', ?, '', '')";
+
+            try (Connection connection = Connect.getConnection();
+                 PreparedStatement statement1 = connection.prepareStatement(query1);
+                 PreparedStatement statement2 = connection.prepareStatement(query2)) {
+
+                // Set parameters for the first query
+                statement1.setString(1, name);
+                statement1.setString(2, meter);
+                statement1.setString(3, address);
+                statement1.setString(4, city);
+                statement1.setString(5, state);
+                statement1.setString(6, email);
+                statement1.setString(7, phone);
+
+                // Execute the first query
+                int rowsAffected1 = statement1.executeUpdate();
+                if (rowsAffected1 > 0) {
+                    // Set parameters for the second query
+                    statement2.setString(1, meter);
+                    statement2.setString(2, name);
+
+                    // Execute the second query
+                    int rowsAffected2 = statement2.executeUpdate();
+                    if (rowsAffected2 > 0) {
+                        JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
+                        setVisible(false);
+                        // new frame
+                        new signUp();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add customer details");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to add customer details");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to add customer details");
+            }
         } else {
             setVisible(false);
         }
     }
-    
+
     public static void main(String[] args) {
         new NewCustomer();
     }
