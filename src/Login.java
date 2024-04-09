@@ -105,16 +105,33 @@ public class Login extends JFrame implements ActionListener {
         setLocation(400, 200);
         setVisible(true);
     }
-
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == login) {
-            //Authenticate the User
+            // Authenticate the User
             String Username = username.getText();
             String Password = String.valueOf(password.getPassword());
-            if (authenticateUser(Username, Password)) {
-                JOptionPane.showMessageDialog(null, "Login successful");
-                // Open main application window or perform further actions
+            AuthResult authResult = authenticateUser(Username, Password);
+            if (authResult != null) {
+                String accountType = authResult.getAccountType();
+                String meterNo = authResult.getMeterNo();
+                if (accountType != null) {
+                    if (accountType.equals("Admin")) {
+                        JOptionPane.showMessageDialog(null, "Login successful as Admin");
+                        // Open Admin Interface
+                        setVisible(false);
+                        new Project(accountType,meterNo);
+                    } else if (accountType.equals("Customer")) {
+                        JOptionPane.showMessageDialog(null, "Login successful as Customer");
 
+                        setVisible(false);
+                        new Project(accountType,meterNo);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Unknown account type: " + accountType);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password");
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid username or password");
             }
@@ -125,9 +142,10 @@ public class Login extends JFrame implements ActionListener {
             setVisible(false);
         }
     }
-    private boolean authenticateUser(String Username, String Password) {
+
+    private AuthResult authenticateUser(String Username, String Password) {
         // Query the database to check if the username and password match
-        String query = "SELECT * FROM users WHERE Username = ? AND Password = ?";
+        String query = "SELECT account_type, meter_number FROM users WHERE Username = ? AND Password = ?";
         try (Connection connection = Connect.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
@@ -135,16 +153,94 @@ public class Login extends JFrame implements ActionListener {
             statement.setString(2, Password);
 
             try (ResultSet resultSet = statement.executeQuery()) {
-                return resultSet.next(); // If a row is returned, authentication successful
+                if (resultSet.next()) {
+                    String accountType = resultSet.getString("account_type");
+                    String meterNo = resultSet.getString("meter_number");
+                    return new AuthResult(accountType, meterNo); // Return account type and meter number
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            return false; // Authentication failed due to database error
+        }
+        return null; // Authentication failed
+    }
+
+    class AuthResult {
+        private final String accountType;
+        private final String meterNo;
+
+        public AuthResult(String accountType, String meterNo) {
+            this.accountType = accountType;
+            this.meterNo = meterNo;
+        }
+
+        public String getAccountType() {
+            return accountType;
+        }
+
+        public String getMeterNo() {
+            return meterNo;
         }
     }
 
+
+
+//    public void actionPerformed(ActionEvent ae) {
+//        if (ae.getSource() == login) {
+//            //Authenticate the User
+//            String Username = username.getText();
+//            String Password = String.valueOf(password.getPassword());
+//            if (authenticateUser(Username, Password)) {
+//                JOptionPane.showMessageDialog(null, "Login successful");
+//                // Open main application window or perform further actions
+//
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Invalid username or password");
+//            }
+//        } else if (ae.getSource() == signup) {
+//            setVisible(false);
+//            new signUp();
+//        } else if (ae.getSource() == cancel) {
+//            setVisible(false);
+//        }
+//    }
+//    private boolean authenticateUser(String Username, String Password) {
+//        // Query the database to check if the username and password match
+//        String query = "SELECT * FROM users WHERE Username = ? AND Password = ?";
+//        try (Connection connection = Connect.getConnection();
+//             PreparedStatement statement = connection.prepareStatement(query)) {
+//
+//            statement.setString(1, Username);
+//            statement.setString(2, Password);
+//
+//            try (ResultSet resultSet = statement.executeQuery()) {
+//                return resultSet.next(); // If a row is returned, authentication successful
+//            }
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            return false; // Authentication failed due to database error
+//        }
+//    }
+
     public static void main(String[] args) {
         new Login();
+    }
+}
+class AuthResult {
+    private final String accountType;
+    private final String meterNo;
+
+    public AuthResult(String accountType, String meterNo) {
+        this.accountType = accountType;
+        this.meterNo = meterNo;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public String getMeterNo() {
+        return meterNo;
     }
 }
 
