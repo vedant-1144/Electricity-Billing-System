@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.awt.event.*;
 import java.sql.*;
 
 public class CalculateBill extends JFrame implements ActionListener{
 
-    JTextField tfname, tfaddress, tfstate, tfunits, tfemail, tfphone;
+    JTextField tfunits;
+//    tfname, tfaddress, tfstate,  tfemail, tfphone;
     JButton next, cancel;
     JLabel lblname, labeladdress;
     Choice meternumber, cmonth;
@@ -41,15 +41,6 @@ public class CalculateBill extends JFrame implements ActionListener{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-//        try {
-//            Connect c  = new Connect();
-//            ResultSet rs = c.executeQuery("select * from customer");
-//            while(rs.next()) {
-//                meternumber.add(rs.getString("meter_no"));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         
         meternumber.setBounds(240, 80, 200, 20);
         p.add(meternumber);
@@ -69,17 +60,7 @@ public class CalculateBill extends JFrame implements ActionListener{
         labeladdress = new JLabel();
         labeladdress.setBounds(240, 160, 200, 20);
         p.add(labeladdress);
-        
-//        try {
-//            Connection connection = Connect.getConnection();
-//            ResultSet rs = c.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
-//            while(rs.next()) {
-//                lblname.setText(rs.getString("name"));
-//                labeladdress.setText(rs.getString("address"));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
         
         meternumber.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ie) {
@@ -97,18 +78,6 @@ public class CalculateBill extends JFrame implements ActionListener{
                 }
             }
         });
-//                 try {
-//                     Connection c = Connect.getConnection();
-//                     ResultSet rs = c.s.executeQuery("select * from customer where meter_no = '"+meternumber.getSelectedItem()+"'");
-//                     while(rs.next()) {
-//                         lblname.setText(rs.getString("name"));
-//                         labeladdress.setText(rs.getString("address"));
-//                     }
-//                 } catch (Exception e) {
-//                     e.printStackTrace();
-//                 }
-//            }
-//        });
         
         JLabel lblcity = new JLabel("Units Consumed");
         lblcity.setBounds(100, 200, 100, 20);
@@ -209,46 +178,6 @@ public class CalculateBill extends JFrame implements ActionListener{
             } else {
                 setVisible(false);
             }
-//        if (ae.getSource() == next) {
-//            String meter = meternumber.getSelectedItem();
-//            String units = tfunits.getText();
-//            String month = cmonth.getSelectedItem();
-//
-//            int totalbill = 0;
-//            int unit_consumed = Integer.parseInt(units);
-//
-//            String query = "select * from tax";
-//
-//            // try {
-//            //     Conn c = new Conn();
-//            //     ResultSet rs = c.s.executeQuery(query);
-//
-//            //     while(rs.next()) {
-//            //         totalbill += unit_consumed * Integer.parseInt(rs.getString("cost_per_unit"));
-//            //         totalbill += Integer.parseInt(rs.getString("meter_rent"));
-//            //         totalbill += Integer.parseInt(rs.getString("service_charge"));
-//            //         totalbill += Integer.parseInt(rs.getString("service_tax"));
-//            //         totalbill += Integer.parseInt(rs.getString("swacch_bharat_cess"));
-//            //         totalbill += Integer.parseInt(rs.getString("fixed_tax"));
-//            //     }
-//            // } catch (Exception e) {
-//            //     e.printStackTrace();
-//            // }
-//
-//            String query2 = "insert into bill values('"+meter+"', '"+month+"', '"+units+"', '"+totalbill+"', 'Not Paid')";
-//
-//            // try {
-//            //     Conn c  =  new Conn();
-//            //     c.s.executeUpdate(query2);
-//
-//            //     JOptionPane.showMessageDialog(null, "Customer Bill Updated Successfully");
-//            //     setVisible(false);
-//            // } catch (Exception e) {
-//            //     e.printStackTrace();
-//            // }
-//        } else {
-//            setVisible(false);
-//        }
         }
     
     public static void main(String[] args) {

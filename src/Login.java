@@ -226,21 +226,4 @@ public class Login extends JFrame implements ActionListener {
         new Login();
     }
 }
-class AuthResult {
-    private final String accountType;
-    private final String meterNo;
-
-    public AuthResult(String accountType, String meterNo) {
-        this.accountType = accountType;
-        this.meterNo = meterNo;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public String getMeterNo() {
-        return meterNo;
-    }
-}
 

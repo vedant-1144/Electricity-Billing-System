@@ -1,9 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ForgotPassword extends JFrame implements ActionListener{
 
     JButton search, retrieve, back;
+    JTextField username;
+    JTextField question;
+    JTextField answer;
+    JTextField password;
     ForgotPassword() {
         super("Forgot Password");
         getContentPane().setBackground(Color.WHITE);
@@ -13,7 +22,7 @@ public class ForgotPassword extends JFrame implements ActionListener{
         lblusername.setBounds(250, 20, 100, 20);
         add(lblusername);
     
-        JTextField username = new JTextField();
+        username = new JTextField();
         username.setBounds(350, 20, 150, 20);
         add(username);
     
@@ -26,7 +35,7 @@ public class ForgotPassword extends JFrame implements ActionListener{
         lblquestion.setBounds(250, 60, 130, 20);
         add(lblquestion);
     
-        JTextField question = new JTextField();
+        question = new JTextField();
         question.setBounds(360, 60, 150, 20);
         add(question);
     
@@ -34,7 +43,7 @@ public class ForgotPassword extends JFrame implements ActionListener{
         lblanswer.setBounds(250, 100, 100, 20);
         add(lblanswer);
     
-        JTextField answer = new JTextField();
+        answer = new JTextField();
         answer.setBounds(350, 100, 150, 20);
         add(answer);
 
@@ -42,7 +51,7 @@ public class ForgotPassword extends JFrame implements ActionListener{
         lblpassword.setBounds(250, 140, 100, 20);
         add(lblpassword);
     
-        JTextField password = new JTextField();
+        password = new JTextField();
         password.setBounds(350, 140, 150, 20);
         add(password);
     
@@ -69,15 +78,54 @@ public class ForgotPassword extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == search) {
-            //Search for the question and display its answer in the text
-        } else if(ae.getSource() == retrieve) {
-            //Retrieve the password associated with the question from the database
-        } else if(ae.getSource() == back) {
+        if (ae.getSource() == search) {
+            // Search for the security question based on username
+            try {
+                Connection conn = Connect.getConnection();
+                String usernameText = username.getText();
+                String query = "SELECT security_question FROM users WHERE username=?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, usernameText);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    question.setText(rs.getString("security_question"));
+                } else {
+                    JOptionPane.showMessageDialog(this, "User not found!");
+                }
+                rs.close();
+                pstmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (ae.getSource() == retrieve) {
+            // Retrieve password based on the security question and answer
+            try {
+                Connection conn = Connect.getConnection();
+                String userAnswer = answer.getText();
+                String secQuestion = question.getText();
+                String query = "SELECT password FROM users WHERE security_question=? AND security_answer=?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, secQuestion);
+                pstmt.setString(2, userAnswer);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    password.setText(rs.getString("password"));
+                } else {
+                    JOptionPane.showMessageDialog(this, "Incorrect answer!");
+                }
+                rs.close();
+                pstmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (ae.getSource() == back) {
             setVisible(false);
             new Login();
         }
     }
+
     public static void main(String[] args) {
         new ForgotPassword();
     }
