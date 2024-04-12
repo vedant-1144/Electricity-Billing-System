@@ -78,83 +78,77 @@ public class PayBill extends JFrame implements ActionListener{
         labelstatus.setBounds(300, 380, 200, 20);
         labelstatus.setForeground(Color.RED);
         add(labelstatus);
-        
-        // try {
-        //     Conn c = new Conn();
-        //     ResultSet rs = c.s.executeQuery("select * from customer where meter_no = '"+meter+"'");
-        //     while(rs.next()) {
-        //         meternumber.setText(meter);
-        //         labelname.setText(rs.getString("name"));
-        //     }
-            
-        //     rs = c.s.executeQuery("select * from bill where meter_no = '"+meter+"' AND month = 'January'");
-        //     while(rs.next()) {
-        //         labelunits.setText(rs.getString("units"));
-        //         labeltotalbill.setText(rs.getString("totalbill"));
-        //         labelstatus.setText(rs.getString("status"));
-        //     }
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-        
-        // cmonth.addItemListener(new ItemListener(){
-        //     @Override
-        //     public void itemStateChanged(ItemEvent ae) {
-        //         try {
-        //             Conn c = new Conn();
-        //             ResultSet rs = c.s.executeQuery("select * from bill where meter_no = '"+meter+"' AND month = '"+cmonth.getSelectedItem()+"'");
-        //             while(rs.next()) {
-        //                 labelunits.setText(rs.getString("units"));
-        //                 labeltotalbill.setText(rs.getString("totalbill"));
-        //                 labelstatus.setText(rs.getString("status"));
-        //             }
-        //         } catch (Exception e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // });
-        
-        
+
+        try {
+            Connection conn = Connect.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM consumer WHERE meter = ?");
+            ps.setString(1, meter);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                meternumber.setText(meter);
+                labelname.setText(rs.getString("name"));
+            }
+
+            ps = conn.prepareStatement("SELECT * FROM bill WHERE meter = ? AND month = ?");
+            ps.setString(1, meter);
+            ps.setString(2, "January"); // Default to January, can be changed by user
+            ResultSet rsBill = ps.executeQuery();
+            if (rsBill.next()) {
+                labelunits.setText(rsBill.getString("units"));
+                labeltotalbill.setText(rsBill.getString("totalbill"));
+                labelstatus.setText(rsBill.getString("status"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         pay = new JButton("Pay");
         pay.setForeground(Color.BLACK);
         pay.setBounds(100, 460, 100, 25);
         pay.addActionListener(this);
         add(pay);
-        
+
         back = new JButton("Back");
         back.setForeground(Color.BLACK);
         back.setBounds(230, 460, 100, 25);
         back.addActionListener(this);
         add(back);
-        
+
         getContentPane().setBackground(Color.WHITE);
-        
+
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/bill.png"));
         Image i2 = i1.getImage().getScaledInstance(600, 300, Image.SCALE_DEFAULT);
         ImageIcon i3 = new ImageIcon(i2);
         JLabel image = new JLabel(i3);
         image.setBounds(400, 120, 600, 300);
         add(image);
-        
+
         setVisible(true);
     }
-    
+
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == pay) {
-            setVisible(false);
-            new PaymentVerification();
-            // try {
-            //     Conn c = new Conn();
-            //     c.s.executeUpdate("update bill set status = 'Paid' where meter_no = '"+meter+"' AND month='"+cmonth.getSelectedItem()+"'");
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
+            try {
+                Connection conn = Connect.getConnection();
+                PreparedStatement ps = conn.prepareStatement("UPDATE bill SET status = 'Paid' WHERE meter = ? AND month = ?");
+                ps.setString(1, meter);
+                ps.setString(2, cmonth.getSelectedItem());
+                int rowsUpdated = ps.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Bill paid successfully.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to pay bill.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error occurred while paying bill.");
+            }
         } else {
             setVisible(false);
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new PayBill("");
     }
 }

@@ -87,6 +87,23 @@ public class ViewInformation extends JFrame implements ActionListener{
         // } catch (Exception e) {
         //     e.printStackTrace();
         // }
+        try {
+            Connection conn = Connect.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM consumer WHERE meter = ?");
+            ps.setString(1, meter);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                name.setText(rs.getString("name"));
+                address.setText(rs.getString("address"));
+                city.setText(rs.getString("city"));
+                state.setText(rs.getString("state"));
+                email.setText(rs.getString("email"));
+                phone.setText(rs.getString("phone"));
+                meternumber.setText(rs.getString("meter"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         cancel = new JButton("Cancel");
         cancel.setForeground(Color.BLACK);

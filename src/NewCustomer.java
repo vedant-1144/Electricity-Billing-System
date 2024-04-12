@@ -8,7 +8,7 @@ import java.awt.event.*;
 
 public class NewCustomer extends JFrame implements ActionListener{
 
-    JTextField tfname, tfaddress, tfstate, tfcity, tfemail, tfphone;
+    JTextField tfname, tfaddress, tfstate, tfmeter, tfcity, tfemail, tfphone;
     JButton next, cancel;
     JLabel lblmeter;
     NewCustomer() {
@@ -36,10 +36,14 @@ public class NewCustomer extends JFrame implements ActionListener{
         JLabel lblmeterno = new JLabel("Meter Number");
         lblmeterno.setBounds(100, 120, 100, 20);
         p.add(lblmeterno);
-        
-        lblmeter = new JLabel("");
-        lblmeter.setBounds(240, 120, 100, 20);
-        p.add(lblmeter);
+
+        tfmeter = new JTextField();
+        tfmeter.setBounds(240, 120, 100, 20);
+        p.add(tfmeter);
+
+//        lblmeter = new JLabel("");
+//        lblmeter.setBounds(240, 120, 100, 20);
+//        p.add(lblmeter);
         
         Random ran = new Random();
         long number = ran.nextLong() % 1000000;
@@ -115,7 +119,7 @@ public class NewCustomer extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == next) {
             String name = tfname.getText();
-            String meter = lblmeter.getText();
+            String meter = tfmeter.getText();//changes random to text
             String address = tfaddress.getText();
             String city = tfcity.getText();
             String state = tfstate.getText();

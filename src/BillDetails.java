@@ -17,7 +17,7 @@ public class BillDetails extends JFrame {
             Connection conn = Connect.getConnection();
 
             // Query to select bill details for a specific meter number
-            String query = "SELECT meter_no, month, units_consumed, total_bill, status FROM bill WHERE meter_no = ?";
+            String query = "SELECT meter, month, units, totalbill, status FROM bill WHERE meter = ?";
             PreparedStatement statement00 = conn.prepareStatement(query);
             statement00.setString(1, meter);
 
@@ -38,10 +38,10 @@ public class BillDetails extends JFrame {
 
             while (rs.next()) {
                 Object[] row = new Object[5];
-                row[0] = rs.getString("meter_no");
+                row[0] = rs.getString("meter");
                 row[1] = rs.getString("month");
-                row[2] = rs.getInt("units_consumed");
-                row[3] = rs.getInt("total_bill");
+                row[2] = rs.getInt("units");
+                row[3] = rs.getInt("totalbill");
                 row[4] = rs.getString("status");
                 model.addRow(row);
             }

@@ -37,15 +37,13 @@ public class Login extends JFrame implements ActionListener {
 
         JToggleButton show = new JToggleButton(new ImageIcon(eye4));
         show.setBounds(555, 60, 16, 16);
-        show.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (show.isSelected()) {
-                    password.setEchoChar((char) 0); // Show password
-                    show.setIcon(new ImageIcon(eye2));
-                } else {
-                    password.setEchoChar('\u2022'); // Hide password
-                    show.setIcon(new ImageIcon(eye4));
-                }
+        show.addActionListener(_ -> {
+            if (show.isSelected()) {
+                password.setEchoChar((char) 0); // Show password
+                show.setIcon(new ImageIcon(eye2));
+            } else {
+                password.setEchoChar('•'); // Hide password
+                show.setIcon(new ImageIcon(eye4));
             }
         });
         add(show);
@@ -112,8 +110,8 @@ public class Login extends JFrame implements ActionListener {
             String Password = String.valueOf(password.getPassword());
             AuthResult authResult = authenticateUser(Username, Password);
             if (authResult != null) {
-                String accountType = authResult.getAccountType();
-                String meterNo = authResult.getMeterNo();
+                String accountType = authResult.accountType();
+                String meterNo = authResult.meterNo();
                 if (accountType != null) {
                     if (accountType.equals("Admin")) {
                         JOptionPane.showMessageDialog(null, "Login successful as Admin");
@@ -165,22 +163,7 @@ public class Login extends JFrame implements ActionListener {
         return null; // Authentication failed
     }
 
-    class AuthResult {
-        private final String accountType;
-        private final String meterNo;
-
-        public AuthResult(String accountType, String meterNo) {
-            this.accountType = accountType;
-            this.meterNo = meterNo;
-        }
-
-        public String getAccountType() {
-            return accountType;
-        }
-
-        public String getMeterNo() {
-            return meterNo;
-        }
+    record AuthResult(String accountType, String meterNo) {
     }
 
 

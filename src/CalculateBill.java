@@ -34,9 +34,9 @@ public class CalculateBill extends JFrame implements ActionListener{
         try {
             Connection connection = Connect.getConnection();
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from customer");
+            ResultSet rs = statement.executeQuery("select * from consumer");
             while(rs.next()) {
-                meternumber.add(rs.getString("meter_no"));
+                meternumber.add(rs.getString("meter"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,7 +66,7 @@ public class CalculateBill extends JFrame implements ActionListener{
             public void itemStateChanged(ItemEvent ie) {
                   try {
                     Connection connection = Connect.getConnection();
-                    PreparedStatement preparedStatement = connection.prepareStatement("select * from customer where meter_no = ?");
+                    PreparedStatement preparedStatement = connection.prepareStatement("select * from consumer where meter = ?");
                     preparedStatement.setString(1, meternumber.getSelectedItem());
                     ResultSet rs = preparedStatement.executeQuery();
                     if(rs.next()) {
