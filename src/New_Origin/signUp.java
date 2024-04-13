@@ -1,3 +1,5 @@
+package New_Origin;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -13,21 +15,21 @@ public class signUp extends JFrame implements ActionListener {
     JTextField username;
     JTextField name;
     JTextField password;
-    JTextField Code;
+    JTextField code; // Changed variable name to code
 
-    signUp(String nam,String met) {
+    signUp(String nam, String met) {
 
         if (nam.isEmpty() && met.isEmpty()) {
             // Initialize default values
             nam = "";
             met = "";
         }
-        setBounds(450, 150, 700, 400);
+        setBounds(450, 150, 700, 450);
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
 
         JPanel panel = new JPanel();
-        panel.setBounds(30, 30, 650, 300);
+        panel.setBounds(30, 30, 650, 350);
         panel.setBorder(new TitledBorder(new LineBorder(new Color(173, 216, 230), 2), "Create-Account", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
         panel.setBackground(Color.WHITE);
         panel.setLayout(null);
@@ -88,30 +90,28 @@ public class signUp extends JFrame implements ActionListener {
         panel.add(password);
 
         String accTyp = accountType.getSelectedItem();
-        if(accTyp.equals("Admin")) {
-            JLabel lblCode = new JLabel("Password");
-            lblpassword.setBounds(100, 210, 140, 20);
-            lblpassword.setForeground(Color.GRAY);
-            lblpassword.setFont(new Font("Tahoma", Font.BOLD, 14));
-            panel.add(lblpassword);
+        if (accTyp.equals("Admin")) {
+            JLabel lblCode = new JLabel("Code"); // Changed label text
+            lblCode.setBounds(100, 250, 140, 20); // Adjusted bounds
+            lblCode.setForeground(Color.GRAY);
+            lblCode.setFont(new Font("Tahoma", Font.BOLD, 14));
+            panel.add(lblCode);
 
-            Code = new JTextField();
-            password.setBounds(260, 210, 150, 20);
-            panel.add(password);
+            code = new JTextField(); // Changed variable name
+            code.setBounds(260, 250, 150, 20); // Adjusted bounds
+            panel.add(code);
         }
 
         //Buttons :-
         create = new JButton("Create");
-        // create.setBackground(Color.BLACK);
         create.setForeground(Color.BLACK);
-        create.setBounds(140, 260, 120, 25);
+        create.setBounds(140, 290, 120, 25); // Adjusted bounds
         create.addActionListener(this);
         panel.add(create);
 
         back = new JButton("Back");
-        // create.setBackground(Color.BLACK);
         back.setForeground(Color.BLACK);
-        back.setBounds(300, 260, 120, 25);
+        back.setBounds(300, 290, 120, 25); // Adjusted bounds
         back.addActionListener(this);
         panel.add(back);
 
@@ -128,6 +128,7 @@ public class signUp extends JFrame implements ActionListener {
         setVisible(true);
 
     }
+
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == create) {
             // Register user in the database
@@ -136,8 +137,9 @@ public class signUp extends JFrame implements ActionListener {
             String user = username.getText();
             String nm = name.getText();
             String pass = password.getText();
+            String cd = code.getText(); // Changed variable name
 
-            registerUser(accType, metNum, user, nm, pass);
+            registerUser(accType, metNum, user, nm, pass, cd); // Passed code as an argument
             setVisible(false);
             new Login();
         } else if (ae.getSource() == back) {
@@ -147,10 +149,10 @@ public class signUp extends JFrame implements ActionListener {
     }
 
     // Method to register user in the database
-    private void registerUser(String accountType, String meterNumber, String username, String name, String password){
+    private void registerUser(String accountType, String meterNumber, String username, String name, String password, String code) {
         try {
             Connection connection = Connect.getConnection();
-            String query = "INSERT INTO users (account_type, meter_number, username, name, password) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Users (user_id,role, meter_number, username, name, password) VALUES (user_id_seq.nextval,?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, accountType);
                 statement.setString(2, meterNumber);
@@ -171,61 +173,8 @@ public class signUp extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "Failed to register user!");
         }
     }
-
-//    public static void main(String[] args) {
-//        new signUp("","");
-//    }
+    public static void main(String[] args){
+        new signUp(" ","");
+    }
 }
 
-//    public void actionPerformed(ActionEvent ae) {
-//        if(ae.getSource() == create) {
-//            // Register user in the database
-//            String accountType = accountType.getSelectedItem();
-//            String meterNumber = meter.getText();
-//            String Username = username.getText();
-//            String name = name.getText();
-//            String password = password.getText();
-//
-//            // Perform registration logic here using the provided information
-//            // For example, you can call a method to insert this data into the database
-//            registerUser(accountType, meterNumber, username, name, password);
-//        } else if(ae.getSource() == back) {
-//            setVisible(false);
-//            new Login();
-//        }
-//    }
-//    public static void main(String[] args) {
-//        new signUp();
-//    }
-//}
-//
-//
-//// Method to register user in the database
-//private void registerUser(String accountType, String meterNumber, String username, String name, String password) {
-//    // Perform database registration logic here
-//    // For example, you can use the Connect class to establish a connection and execute an insert query
-//    // You can use PreparedStatement to prevent SQL injection
-//
-//    // Example code:
-//    try {
-//        Connection connection = Connect.getConnection();
-//        String query = "INSERT INTO users (account_type, meter_number, username, name, password) VALUES (?, ?, ?, ?, ?)";
-//        try (PreparedStatement statement = connection.prepareStatement(query)) {
-//            statement.setString(1, accountType);
-//            statement.setString(2, meterNumber);
-//            statement.setString(3, username);
-//            statement.setString(4, name);
-//            statement.setString(5, password);
-//            int rowsInserted = statement.executeUpdate();
-//            if (rowsInserted > 0) {
-//                JOptionPane.showMessageDialog(this, "User registered successfully!");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Failed to register user!");
-//            }
-//        }
-//    } catch (SQLException ex) {
-//        ex.printStackTrace();
-//        JOptionPane.showMessageDialog(this, "Failed to register user!");
-//    }
-//}
-//}

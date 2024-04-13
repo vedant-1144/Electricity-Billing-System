@@ -45,9 +45,9 @@ public class NewCustomer extends JFrame implements ActionListener{
 //        lblmeter.setBounds(240, 120, 100, 20);
 //        p.add(lblmeter);
         
-        Random ran = new Random();
-        long number = ran.nextLong() % 1000000;
-        lblmeter.setText("" + Math.abs(number));
+//        Random ran = new Random();
+//        long number = ran.nextLong() % 1000000;
+//        lblmeter.setText("" + Math.abs(number));
         
         JLabel lbladdress = new JLabel("Address");
         lbladdress.setBounds(100, 160, 100, 20);
@@ -155,7 +155,7 @@ public class NewCustomer extends JFrame implements ActionListener{
                         JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
                         setVisible(false);
                         // new frame
-                        new signUp();
+                        new signUp(name,meter);
                     } else {
                         JOptionPane.showMessageDialog(null, "Failed to add customer details");
                     }
