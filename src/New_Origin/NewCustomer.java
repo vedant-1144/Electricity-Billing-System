@@ -168,6 +168,7 @@ public class NewCustomer extends JFrame implements ActionListener {
                         if (rowsAffected > 0) {
                             JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
                             setVisible(false);
+                            new MeterInfo(meter);
                             new signUp(name, meter);
                         } else {
                             JOptionPane.showMessageDialog(null, "Failed to add customer details");

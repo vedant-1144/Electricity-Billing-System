@@ -195,7 +195,11 @@ public class Project extends JFrame implements ActionListener {
         String msg = ae.getActionCommand();
         if (msg.equals("New Customer")) {
             new NewCustomer();
-        } else if (msg.equals("Customer Details")) {
+        }
+        else if(msg.equals("Meter Info")){
+            new MeterInfo(meter);
+        }
+        else if (msg.equals("Customer Details")) {
             new CustomerDetails();
         } else if (msg.equals("Deposit Details")) {
             // Handle Deposit Details action
@@ -238,6 +242,6 @@ public class Project extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args){
-        new Project("Consumer","1");
+        new Project("Admin","1");
     }
 }

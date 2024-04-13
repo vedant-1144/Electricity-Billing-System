@@ -122,12 +122,12 @@ public class Login extends JFrame implements ActionListener {
                         JOptionPane.showMessageDialog(null, "Login successful as Meter:" + meterNo);
                         // Open Admin Interface
                         setVisible(false);
-//                        new Project(accountType, meterNo);
+                        new Project(accountType, meterNo);
                     } else if (accountType.equals("Customer")) {
                         JOptionPane.showMessageDialog(null, "Login successful as Customer");
 
                         setVisible(false);
-//                        new Project(accountType, meterNo);
+                        new Project(accountType, meterNo);
 
                     } else {
                         JOptionPane.showMessageDialog(null, "Unknown account type: " + accountType);
