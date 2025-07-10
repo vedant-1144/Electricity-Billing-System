@@ -1,11 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.awt.event.*;
 
 public class NewCustomer extends JFrame implements ActionListener{
 
-    JTextField tfname, tfaddress, tfstate, tfcity, tfemail, tfphone;
+    JTextField tfname, tfaddress, tfstate, tfmeter, tfcity, tfemail, tfphone;
     JButton next, cancel;
     JLabel lblmeter;
     NewCustomer() {
@@ -33,14 +36,18 @@ public class NewCustomer extends JFrame implements ActionListener{
         JLabel lblmeterno = new JLabel("Meter Number");
         lblmeterno.setBounds(100, 120, 100, 20);
         p.add(lblmeterno);
+
+        tfmeter = new JTextField();
+        tfmeter.setBounds(240, 120, 100, 20);
+        p.add(tfmeter);
+
+//        lblmeter = new JLabel("");
+//        lblmeter.setBounds(240, 120, 100, 20);
+//        p.add(lblmeter);
         
-        lblmeter = new JLabel("");
-        lblmeter.setBounds(240, 120, 100, 20);
-        p.add(lblmeter);
-        
-        Random ran = new Random();
-        long number = ran.nextLong() % 1000000;
-        lblmeter.setText("" + Math.abs(number));
+//        Random ran = new Random();
+//        long number = ran.nextLong() % 1000000;
+//        lblmeter.setText("" + Math.abs(number));
         
         JLabel lbladdress = new JLabel("Address");
         lbladdress.setBounds(100, 160, 100, 20);
@@ -112,12 +119,53 @@ public class NewCustomer extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == next) {
             String name = tfname.getText();
-            String meter = lblmeter.getText();
+            String meter = tfmeter.getText();//changes random to text
             String address = tfaddress.getText();
             String city = tfcity.getText();
             String state = tfstate.getText();
             String email = tfemail.getText();
             String phone = tfphone.getText();
+          
+            String query1 = "INSERT INTO consumer VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query2 = "INSERT INTO users VALUES (?, '', ?, '', '')";
+
+            try (Connection connection = Connect.getConnection();
+                 PreparedStatement statement1 = connection.prepareStatement(query1);
+                 PreparedStatement statement2 = connection.prepareStatement(query2)) {
+
+                // Set parameters for the first query
+                statement1.setString(1, name);
+                statement1.setString(2, meter);
+                statement1.setString(3, address);
+                statement1.setString(4, city);
+                statement1.setString(5, state);
+                statement1.setString(6, email);
+                statement1.setString(7, phone);
+
+                // Execute the first query
+                int rowsAffected1 = statement1.executeUpdate();
+                if (rowsAffected1 > 0) {
+                    // Set parameters for the second query
+                    statement2.setString(1, meter);
+                    statement2.setString(2, name);
+
+                    // Execute the second query
+                    int rowsAffected2 = statement2.executeUpdate();
+                    if (rowsAffected2 > 0) {
+                        JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
+                        setVisible(false);
+                        // new frame
+                        new signUp(name,meter);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Failed to add customer details");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Failed to add customer details");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Failed to add customer details");
+            }
             
             String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"', '"+city+"', '"+state+"', '"+email+"', '"+phone+"')";
             String query2 = "insert into login values('"+meter+"', '', '"+name+"', '', '')";
@@ -139,7 +187,7 @@ public class NewCustomer extends JFrame implements ActionListener{
             setVisible(false);
         }
     }
-    
+
     public static void main(String[] args) {
         new NewCustomer();
     }

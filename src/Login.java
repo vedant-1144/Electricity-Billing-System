@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
-public class Login extends JFrame implements ActionListener{
+public class Login extends JFrame implements ActionListener {
 
     JButton login, signup, cancel;
     JTextField username;
@@ -15,15 +15,15 @@ public class Login extends JFrame implements ActionListener{
         setLayout(null);
 
         JLabel lblusername = new JLabel("Username");
-        lblusername.setBounds(300,20,100,20);
+        lblusername.setBounds(300, 20, 100, 20);
         add(lblusername);
 
         username = new JTextField();
-        username.setBounds(400,20,150,20);
+        username.setBounds(400, 20, 150, 20);
         add(username);
 
         JLabel lblpassword = new JLabel("Password");
-        lblpassword.setBounds(300,60,100,20);
+        lblpassword.setBounds(300, 60, 100, 20);
         add(lblpassword);
 
         password = new JPasswordField();
@@ -37,47 +37,45 @@ public class Login extends JFrame implements ActionListener{
 
         JToggleButton show = new JToggleButton(new ImageIcon(eye4));
         show.setBounds(555, 60, 16, 16);
-        show.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (show.isSelected()) {
-                    password.setEchoChar((char) 0); // Show password
-                    show.setIcon(new ImageIcon(eye2));
-                } else {
-                    password.setEchoChar('\u2022'); // Hide password
-                    show.setIcon(new ImageIcon(eye4));
-                }
+        show.addActionListener(_ -> {
+            if (show.isSelected()) {
+                password.setEchoChar((char) 0); // Show password
+                show.setIcon(new ImageIcon(eye2));
+            } else {
+                password.setEchoChar('•'); // Hide password
+                show.setIcon(new ImageIcon(eye4));
             }
         });
         add(show);
 
         JLabel logginginas = new JLabel("Logging in as");
-        logginginas.setBounds(300,100,100,20);
+        logginginas.setBounds(300, 100, 100, 20);
         add(logginginas);
 
         loggingin = new Choice();
         loggingin.add("Admin");
         loggingin.add("Customer");
-        loggingin.setBounds(400,100,150,20);
+        loggingin.setBounds(400, 100, 150, 20);
         add(loggingin);
 
         ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("icon/login.png"));
         Image i2 = i1.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
         login = new JButton("Login", new ImageIcon(i2));
-        login.setBounds(330,160,100,20);
+        login.setBounds(330, 160, 100, 20);
         login.addActionListener(this);
         add(login);
 
         ImageIcon i3 = new ImageIcon(ClassLoader.getSystemResource("icon/cancel.jpg"));
         Image i4 = i3.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
         cancel = new JButton("Cancel", new ImageIcon(i4));
-        cancel.setBounds(450,160,100,20);
+        cancel.setBounds(450, 160, 100, 20);
         cancel.addActionListener(this);
         add(cancel);
 
         ImageIcon i5 = new ImageIcon(ClassLoader.getSystemResource("icon/signup.png"));
         Image i6 = i5.getImage().getScaledInstance(16, 16, Image.SCALE_DEFAULT);
         signup = new JButton("Sign Up", new ImageIcon(i6));
-        signup.setBounds(330,200,100,20);
+        signup.setBounds(330, 200, 100, 20);
         signup.addActionListener(this);
         add(signup);
 
@@ -98,25 +96,118 @@ public class Login extends JFrame implements ActionListener{
         Image i10 = i9.getImage().getScaledInstance(300, 300, Image.SCALE_DEFAULT);
         ImageIcon i11 = new ImageIcon(i10);
         JLabel image = new JLabel(i11);
-        image.setBounds(0,0,300,300);
+        image.setBounds(0, 0, 300, 300);
         add(image);
 
-        setSize(650,320);
-        setLocation(400,200);
+        setSize(650, 320);
+        setLocation(400, 200);
         setVisible(true);
     }
-
     public void actionPerformed(ActionEvent ae) {
-        if(ae.getSource() == login) {
-            //Authenticate the User
-        } else if(ae.getSource() == signup) {
+        if (ae.getSource() == login) {
+            // Authenticate the User
+            String Username = username.getText();
+            String Password = String.valueOf(password.getPassword());
+            AuthResult authResult = authenticateUser(Username, Password);
+            if (authResult != null) {
+                String accountType = authResult.accountType();
+                String meterNo = authResult.meterNo();
+                if (accountType != null) {
+                    if (accountType.equals("Admin")) {
+                        JOptionPane.showMessageDialog(null, "Login successful as Admin");
+                        JOptionPane.showMessageDialog(null, "Login successful as Meter:"+meterNo);
+                        // Open Admin Interface
+                        setVisible(false);
+                        new Project(accountType,meterNo);
+                    } else if (accountType.equals("Customer")) {
+                        JOptionPane.showMessageDialog(null, "Login successful as Customer");
+
+                        setVisible(false);
+                        new Project(accountType,meterNo);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Unknown account type: " + accountType);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid username or password");
+            }
+        } else if (ae.getSource() == signup) {
             setVisible(false);
-            new signUp();
-        } else if(ae.getSource() == cancel) {
+            new signUp("","");
+        } else if (ae.getSource() == cancel) {
             setVisible(false);
         }
     }
+
+    private AuthResult authenticateUser(String Username, String Password) {
+        // Query the database to check if the username and password match
+        String query = "SELECT account_type, meter_number FROM users WHERE Username = ? AND Password = ?";
+        try (Connection connection = Connect.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, Username);
+            statement.setString(2, Password);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String accountType = resultSet.getString("account_type");
+                    String meterNo = resultSet.getString("meter_number");
+                    return new AuthResult(accountType, meterNo); // Return account type and meter number
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null; // Authentication failed
+    }
+
+    record AuthResult(String accountType, String meterNo) {
+    }
+
+
+
+//    public void actionPerformed(ActionEvent ae) {
+//        if (ae.getSource() == login) {
+//            //Authenticate the User
+//            String Username = username.getText();
+//            String Password = String.valueOf(password.getPassword());
+//            if (authenticateUser(Username, Password)) {
+//                JOptionPane.showMessageDialog(null, "Login successful");
+//                // Open main application window or perform further actions
+//
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Invalid username or password");
+//            }
+//        } else if (ae.getSource() == signup) {
+//            setVisible(false);
+//            new signUp();
+//        } else if (ae.getSource() == cancel) {
+//            setVisible(false);
+//        }
+//    }
+//    private boolean authenticateUser(String Username, String Password) {
+//        // Query the database to check if the username and password match
+//        String query = "SELECT * FROM users WHERE Username = ? AND Password = ?";
+//        try (Connection connection = Connect.getConnection();
+//             PreparedStatement statement = connection.prepareStatement(query)) {
+//
+//            statement.setString(1, Username);
+//            statement.setString(2, Password);
+//
+//            try (ResultSet resultSet = statement.executeQuery()) {
+//                return resultSet.next(); // If a row is returned, authentication successful
+//            }
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            return false; // Authentication failed due to database error
+//        }
+//    }
+
     public static void main(String[] args) {
         new Login();
     }
 }
+

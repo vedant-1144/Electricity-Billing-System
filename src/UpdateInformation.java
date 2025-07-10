@@ -91,6 +91,23 @@ public class UpdateInformation extends JFrame implements ActionListener{
         // } catch (Exception e) {
         //     e.printStackTrace();
         // }
+        try {
+            Connection conn = Connect.getConnection();
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM consumer WHERE meter = ?");
+            ps.setString(1, meter);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                name.setText(rs.getString("name"));
+                tfaddress.setText(rs.getString("address"));
+                tfcity.setText(rs.getString("city"));
+                tfstate.setText(rs.getString("state"));
+                tfemail.setText(rs.getString("email"));
+                tfphone.setText(rs.getString("phone"));
+                meternumber.setText(rs.getString("meter_no"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         update = new JButton("Update");
         update.setForeground(Color.BLACK);
@@ -118,6 +135,26 @@ public class UpdateInformation extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == update) {
             //Update the Database
+            try {
+                Connection conn = Connect.getConnection();
+                PreparedStatement ps = conn.prepareStatement("UPDATE consumer SET address=?, city=?, state=?, email=?, phone=? WHERE meter=?");
+                ps.setString(1, tfaddress.getText());
+                ps.setString(2, tfcity.getText());
+                ps.setString(3, tfstate.getText());
+                ps.setString(4, tfemail.getText());
+                ps.setString(5, tfphone.getText());
+                ps.setString(6, meter);
+
+                int rowsUpdated = ps.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(this, "Customer information updated successfully.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Failed to update customer information.");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error occurred while updating customer information.");
+            }
         } else {
             setVisible(false);
         }

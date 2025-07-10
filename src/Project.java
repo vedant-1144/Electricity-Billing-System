@@ -207,6 +207,7 @@ public class Project extends JFrame implements ActionListener{
         } else if (msg.equals("Calculate Bill")) {
             new CalculateBill();
         } else if (msg.equals("View Information")) {
+            JOptionPane.showMessageDialog(null, "Login successful as Meter:"+meter);
             new ViewInformation(meter);
         } else if (msg.equals("Update Information")) {
             new UpdateInformation(meter);
