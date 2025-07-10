@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 public class Project extends JFrame implements ActionListener{
 
+    private String Description = "Electricity Billing System\nProject By :-\n1.Vedant Takalkar\n2.Pratik Sukale\n3.Ashish Suryawanshi";
     String atype, meter;
     
     Project(String atype, String meter) {
@@ -186,7 +187,7 @@ public class Project extends JFrame implements ActionListener{
         about.setCursor(new Cursor(Cursor.HAND_CURSOR));
         about.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(Project.this, "Electricity Billing System");
+                JOptionPane.showMessageDialog(Project.this, Description);
             }
         });
         mb.add(about);

@@ -125,7 +125,7 @@ public class NewCustomer extends JFrame implements ActionListener{
             String state = tfstate.getText();
             String email = tfemail.getText();
             String phone = tfphone.getText();
-
+          
             String query1 = "INSERT INTO consumer VALUES (?, ?, ?, ?, ?, ?, ?)";
             String query2 = "INSERT INTO users VALUES (?, '', ?, '', '')";
 
@@ -166,6 +166,23 @@ public class NewCustomer extends JFrame implements ActionListener{
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Failed to add customer details");
             }
+            
+            String query1 = "insert into customer values('"+name+"', '"+meter+"', '"+address+"', '"+city+"', '"+state+"', '"+email+"', '"+phone+"')";
+            String query2 = "insert into login values('"+meter+"', '', '"+name+"', '', '')";
+            
+            // try {
+            //     Conn c = new Conn();
+            //     c.executeUpdate(query1);
+            //     c.executeUpdate(query2);
+                
+            //     JOptionPane.showMessageDialog(null, "Customer Details Added Successfully");
+            //     setVisible(false);
+                
+            //     // new frame
+                new MeterInfo(meter);
+            // } catch (Exception e) {
+            //     e.printStackTrace();
+            // }
         } else {
             setVisible(false);
         }
